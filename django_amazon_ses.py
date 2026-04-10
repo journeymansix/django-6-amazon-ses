@@ -116,8 +116,8 @@ class EmailBackend(BaseEmailBackend):
         """
         msg_obj = email_message.message()
         buf = io.BytesIO()
-        g = BytesGenerator(buf, mangle_from_=False, linesep="\r\n")
-        g.flatten(msg_obj)
+        g = BytesGenerator(buf, mangle_from_=False)
+        g.flatten(msg_obj, linesep="\r\n")
         message = buf.getvalue()
 
         try:
