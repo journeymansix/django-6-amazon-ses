@@ -110,10 +110,9 @@ class EmailBackend(BaseEmailBackend):
         import io
         from email.generator import BytesGenerator
 
-        """ This pproach works with both the
-        legacy email.message.Message (used by Django ≤ 5.x)
-        and the new email.message.EmailMessage (Django 6.0+)
-        """
+        # This approach works with both the legacy
+        # email.message.Message (used by Django ≤ 5.x)
+        # and the new email.message.EmailMessage (Django 6.0+).
         msg_obj = email_message.message()
         buf = io.BytesIO()
         g = BytesGenerator(buf, mangle_from_=False)
