@@ -1,4 +1,7 @@
 """Boto3 email backend class for Amazon SES."""
+import io
+from email.generator import BytesGenerator
+
 import boto3
 
 from botocore.exceptions import BotoCoreError, ClientError
@@ -107,8 +110,6 @@ class EmailBackend(BaseEmailBackend):
             sanitize_address(addr, email_message.encoding)
             for addr in email_message.recipients()
         ]
-        import io
-        from email.generator import BytesGenerator
 
         # This approach works with both the legacy
         # email.message.Message (used by Django ≤ 5.x)
