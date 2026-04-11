@@ -1,4 +1,7 @@
 """Boto3 email backend class for Amazon SES."""
+import io
+from email.generator import BytesGenerator
+
 import boto3
 
 from botocore.exceptions import BotoCoreError, ClientError
@@ -107,7 +110,15 @@ class EmailBackend(BaseEmailBackend):
             sanitize_address(addr, email_message.encoding)
             for addr in email_message.recipients()
         ]
-        message = email_message.message().as_bytes(linesep="\r\n")
+
+        # This approach works with both the legacy
+        # email.message.Message (used by Django ≤ 5.x)
+        # and the new email.message.EmailMessage (Django 6.0+).
+        msg_obj = email_message.message()
+        buf = io.BytesIO()
+        g = BytesGenerator(buf, mangle_from_=False)
+        g.flatten(msg_obj, linesep="\r\n")
+        message = buf.getvalue()
 
         try:
             kwargs = {
